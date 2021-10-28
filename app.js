@@ -3,8 +3,10 @@ const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt')
 
 const Todo = require('./models/todo');
+const User = require('./models/user');
 
 const app = express();
 
@@ -22,9 +24,20 @@ app.use(
           createdAt: String
           updatedAt: String
         }
+        type User {
+          id: ID!
+          email: String!
+          createdAt: String
+          updatedAt: String
+        }
+        
         input TodoInput {
           title: String!
           description: String
+        }
+        input UserInput {
+          email: String!
+          password: String!
         }
         
         type RootQuery {
@@ -32,6 +45,7 @@ app.use(
         }
         type RootMutation {
             createTodo(title: String, description: String): Todo
+            createUser(userInput: UserInput): User
         }
         schema {
             query: RootQuery
@@ -49,9 +63,21 @@ app.use(
                         description
                     });
                     return await todo.save()
-                } catch (e) {
-                    console.log(e)
-                    throw e;
+                } catch (err) {
+                    throw err;
+                }
+            },
+            createUser: async (args) => {
+                try {
+                    const { email, password } = args.userInput
+                    const hashedPassword = await bcrypt.hash(password, 12);
+                    let user = new User({
+                        email,
+                        password: hashedPassword
+                    })
+                    return user.save();
+                } catch (err) {
+                    throw err;
                 }
             }
         },
