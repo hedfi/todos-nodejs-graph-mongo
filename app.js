@@ -2,10 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
+const mongoose = require('mongoose');
+
+const Todo = require('./models/todo');
 
 const app = express();
-
-const todos = [];
 
 app.use(bodyParser.json());
 
@@ -14,10 +15,12 @@ app.use(
     graphqlHTTP({
         schema: buildSchema(`
         type Todo {
+          id: ID!
           title: String!
           description: String
-          date: String!
           completed: Boolean!
+          createdAt: String
+          updatedAt: String
         }
         input TodoInput {
           title: String!
@@ -36,22 +39,31 @@ app.use(
         }
     `),
         rootValue: {
-            todos: () => {
-                return todos;
+            todos: async () => {
+                return await Todo.find();
             },
-            createTodo: ({ title, description }) => {
-                const todo = {
-                    title,
-                    description,
-                    date: new Date().toISOString(),
-                    completed: false
-                };
-                todos.push(todo);
-                return todo;
+            createTodo: async ({title, description}) => {
+                try {
+                    const todo = new Todo({
+                        title,
+                        description
+                    });
+                    return await todo.save()
+                } catch (e) {
+                    console.log(e)
+                    throw e;
+                }
             }
         },
         graphiql: true
     })
 );
 
-app.listen(3000);
+mongoose
+    .connect(`mongodb://localhost:27017/todos_bd`)
+    .then(() => {
+        app.listen(3000);
+    })
+    .catch(err => {
+        console.log(err);
+    });
