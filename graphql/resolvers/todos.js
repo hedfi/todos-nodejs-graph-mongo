@@ -25,6 +25,39 @@ module.exports = {
             } catch (err) {
                 throw err;
             }
+        },
+        editTodo: async (root, args, context, info) => {
+            const { todoId, title, description, completed } = args
+            if (!context.isAuth) {
+                throw new Error('Unauthenticated!');
+            }
+            try {
+                let currentTodo = await Todo.findOne({ _id: todoId, user: context.user.aud})
+                if(!currentTodo) {
+                    throw new Error('The resource was not found!');
+                }
+                return await Todo.findByIdAndUpdate(todoId, { title, description, completed }, {
+                    new: true
+                });
+            } catch (err) {
+                throw err;
+            }
+        },
+        deleteTodo: async (root, args, context, info) => {
+            const { todoId } = args
+            if (!context.isAuth) {
+                throw new Error('Unauthenticated!');
+            }
+            try {
+                let currentTodo = await Todo.findOne({ _id: todoId, user: context.user.aud})
+                console.log(currentTodo)
+                if(!currentTodo) {
+                    throw new Error('The resource was not found!');
+                }
+                return await Todo.findByIdAndDelete(todoId)
+            } catch (err) {
+                throw err;
+            }
         }
     }
 }

@@ -31,7 +31,9 @@ const typeDefs = `
             todos: [Todo!]!
         }
         type Mutation {
-            createTodo(title: String, description: String): Todo
+            createTodo(title: String!, description: String): Todo
+            editTodo(todoId: ID!, title: String, description: String, completed: Boolean): Todo
+            deleteTodo(todoId: ID!): Todo
             createUser(userInput: UserInput): AuthData
             loginUser(userInput: UserInput): AuthData
         }
