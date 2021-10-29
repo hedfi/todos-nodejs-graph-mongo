@@ -1,0 +1,18 @@
+# Todo API Server built with Node, Mongo and Graphql
+
+This repo contains Authenticate GraphQL Queries With JsonWebTokens(JWT) in Orm-NodeJS environment using:
+- Node
+- Mongo
+- ✨Graphql ✨
+
+## Getting Started
+
+- Clone the repo. Switch to the repo downloaded.
+- Install dependencies with `npm install`
+- Run `npm install -g nodemon` to install Nodemon Globally.
+- Run `npm start` to run the NodeJS Server.
+
+
+## Database Setup
+
+Download and isntall MogoDB. Make sure that the database is running at `127.0.0.1:27017`
