@@ -10,10 +10,12 @@ const typeDefs = require('./graphql/schema/');
 const resolvers = require('./graphql/resolvers/');
 
 const apiKey = require('./middlewares/apiKey');
+const auth = require('./middlewares/auth');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(auth)
 
 const executableSchema = makeExecutableSchema({
     typeDefs,

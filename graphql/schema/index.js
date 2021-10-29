@@ -13,6 +13,10 @@ const typeDefs = `
           createdAt: String
           updatedAt: String
         }
+        type AuthData {
+          user: User!
+          token: String!
+        }
         
         input TodoInput {
           title: String!
@@ -28,7 +32,8 @@ const typeDefs = `
         }
         type Mutation {
             createTodo(title: String, description: String): Todo
-            createUser(userInput: UserInput): User
+            createUser(userInput: UserInput): AuthData
+            loginUser(userInput: UserInput): AuthData
         }
         schema {
             query: Query

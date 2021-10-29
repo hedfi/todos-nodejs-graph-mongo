@@ -1,14 +1,6 @@
-const usersResolver = require('./users');
 const todosResolver = require('./todos');
+const authResolver = require('./auth');
 
-const resolvers = {
-    Query: {
-        ...todosResolver.Query,
-    },
-    Mutation: {
-        ...usersResolver.Mutation,
-        ...todosResolver.Mutation,
-    }
-};
+const resolvers = [todosResolver, authResolver]
 
 module.exports = resolvers;
