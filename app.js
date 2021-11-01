@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { applyMiddleware } = require('graphql-middleware')
@@ -15,6 +16,7 @@ const auth = require('./middlewares/auth');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors())
 app.use(auth)
 
 const executableSchema = makeExecutableSchema({
