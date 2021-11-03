@@ -7,6 +7,10 @@ const typeDefs = `
           createdAt: String
           updatedAt: String
         }
+        type Todos {
+            count: Int!
+            todos: [Todo!]!
+        }
         type User {
           id: ID!
           email: String!
@@ -28,7 +32,7 @@ const typeDefs = `
         }
         
         type Query {
-            todos: [Todo!]!
+            todos: Todos
         }
         type Mutation {
             createTodo(title: String!, description: String): Todo

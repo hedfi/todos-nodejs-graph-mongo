@@ -13,7 +13,9 @@ module.exports = {
             if (!context.isAuth) {
                 throw new Error('Unauthenticated!');
             }
-            return await Todo.find({ user : context.user.aud }).sort(methodSort).skip(skip).limit(limit);
+            const countTodos = await Todo.count({ user : context.user.aud });
+            const todos = await Todo.find({ user : context.user.aud }).sort(methodSort).skip(skip).limit(limit);
+            return { count: countTodos, todos: todos }
         },
     },
     Mutation: {
