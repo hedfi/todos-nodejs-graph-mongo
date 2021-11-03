@@ -32,11 +32,15 @@ module.exports = {
                 throw new Error('Unauthenticated!');
             }
             try {
+                const payload = {}
                 let currentTodo = await Todo.findOne({ _id: todoId, user: context.user.aud})
                 if(!currentTodo) {
                     throw new Error('The resource was not found!');
                 }
-                return await Todo.findByIdAndUpdate(todoId, { title, description, completed }, {
+                if(title) payload.title = title
+                if(description) payload.description = description
+                if(completed != undefined) payload.completed = completed
+                return await Todo.findByIdAndUpdate(todoId, payload, {
                     new: true
                 });
             } catch (err) {
