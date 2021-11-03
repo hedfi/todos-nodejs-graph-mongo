@@ -1,12 +1,24 @@
 const Todo = require("../../models/todo");
+const defaultLimit = require('../../config').PER_PAGE_DEFAULT
 
 module.exports = {
     Query: {
-        todos: async (root, args, context, info) => {
+        todos: async (root, args, context, info) =>
+        {
+            let skip = 0
+            let limit = defaultLimit
+            let orderField = 'createdAt'
+            let orderBy = 'asc'
+            if(context.query && context.query.skip) skip = parseInt(context.query.skip)
+            if(context.query && context.query.limit) limit = parseInt(context.query.limit)
+            if(context.query && context.query.orderField) orderField = context.query.orderField
+            if(context.query && context.query.orderBy) orderBy = context.query.orderBy
+
+            let methodSort = { [orderField]: orderBy };
             if (!context.isAuth) {
                 throw new Error('Unauthenticated!');
             }
-            return await Todo.find({ user : context.user.aud });
+            return await Todo.find({ user : context.user.aud }).sort(methodSort).skip(skip).limit(limit);
         },
     },
     Mutation: {
