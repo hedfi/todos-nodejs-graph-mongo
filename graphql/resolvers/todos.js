@@ -13,8 +13,12 @@ module.exports = {
             if (!context.isAuth) {
                 throw new Error('Unauthenticated!');
             }
-            const countTodos = await Todo.count({ user : context.user.aud });
-            const todos = await Todo.find({ user : context.user.aud }).sort(methodSort).skip(skip).limit(limit);
+            const completed = context.body.variables.completed || ''
+
+            const query = { user : context.user.aud }
+            if(completed) query.completed = completed
+            const countTodos = await Todo.count(query);
+            const todos = await Todo.find(query).sort(methodSort).skip(skip).limit(limit);
             return { count: countTodos, todos: todos }
         },
     },
